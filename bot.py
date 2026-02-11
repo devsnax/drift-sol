@@ -2,7 +2,6 @@ from solathon import Client, Keypair
 from solathon import Transaction
 from solathon.utils import sol_to_lamport
 from datetime import datetime, timedelta
-from dotenv import load_dotenv
 import os
 import json
 import base64
@@ -14,9 +13,6 @@ import urllib3
 
 # Disable SSL warnings for testing
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-# loading solana private key as an env var
-load_dotenv()
 
 # Telegram config
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
