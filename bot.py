@@ -2,6 +2,7 @@ from solathon import Client, Keypair
 from solathon import Transaction
 from solathon.utils import sol_to_lamport
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
 import os
 import json
 import base64
@@ -13,6 +14,9 @@ import urllib3
 
 # Disable SSL warnings for testing
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+# loading solana private key as an env var
+load_dotenv()
 
 # Telegram config
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
@@ -757,7 +761,32 @@ PnL: ${pnl_usd:.4f} ({pnl_pct:+.2f}%)
 # ═══════════════════════════════════════════════════════════════════════
 
 key_str = os.environ.get("SOLANA_PRIVATE_KEY")
-secret_key = bytes(json.loads(key_str))
+
+if not key_str:
+    print("\n" + "="*70)
+    print("ERROR: SOLANA_PRIVATE_KEY environment variable not set!")
+    print("="*70)
+    print("\nPlease set the following environment variables:")
+    print("  - SOLANA_PRIVATE_KEY (your wallet private key as JSON array)")
+    print("  - TELEGRAM_BOT_TOKEN (optional, for notifications)")
+    print("  - TELEGRAM_CHAT_ID (optional, for notifications)")
+    print("\nExample SOLANA_PRIVATE_KEY format:")
+    print('  [123,45,67,89,...] (array of 64 numbers)')
+    print("="*70 + "\n")
+    exit(1)
+
+try:
+    secret_key = bytes(json.loads(key_str))
+except json.JSONDecodeError as e:
+    print("\n" + "="*70)
+    print("ERROR: SOLANA_PRIVATE_KEY is not valid JSON!")
+    print("="*70)
+    print(f"\nJSON Error: {e}")
+    print("\nMake sure your private key is a JSON array like:")
+    print('  [123,45,67,89,...]')
+    print("="*70 + "\n")
+    exit(1)
+
 client = Client("https://api.mainnet-beta.solana.com")  # MAINNET
 wallet = Keypair.from_private_key(secret_key)
 
