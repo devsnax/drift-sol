@@ -447,33 +447,9 @@ def get_token_signal(client):
             
             sell_buy_ratio = sells_5m / buys_5m if buys_5m > 0 else 999
             
-            # Basic filters (LOOSENED FOR TESTING)
-            # Age: 2-60 minutes (was 5-30)
-            if age_minutes < 2 or age_minutes > 60:
-                continue
-            
-            # Liquidity: $1K-$100K (was $3K-$50K)
-            if liquidity_usd < 1000 or liquidity_usd > 100000:
-                continue
-            
-            # Market Cap: $5K-$1M (was $10K-$500K)
-            if market_cap < 5000 or market_cap > 1000000:
-                continue
-            
-            # Volume (5m): >$2K (was >$5K)
-            if volume_5m < 2000:
-                continue
-            
-            # Buys (5m): >10 (was >20)
-            if buys_5m < 10:
-                continue
-            
-            # Sell/Buy ratio: <0.8 (was <0.5)
-            if sell_buy_ratio > 0.8:
-                continue
-            
-            # Price momentum (5m): +5% to +300% (was +10% to +200%)
-            if price_change_5m < 5 or price_change_5m > 300:
+            # ALL FILTERS DISABLED FOR TESTING
+            # Just need a valid pair with some price data
+            if not pair.get("priceUsd"):
                 continue
             
             # Safety checks - ALL DISABLED FOR TESTING
